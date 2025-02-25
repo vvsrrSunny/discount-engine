@@ -1,66 +1,69 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Prerequisites](#prerequisites)
+* [Setup](#setup)
+* [API Documentation](#api-documentation)
+* [Artisan Commands](#artisan-commands)
+* [Testing](#testing)
+## General info
+Testing the discount engine which applies on the projects.
+	
+## Technologies
+Project is created with:
+* laravel: 11.9
+* php: 8.2
+* Mysql: 8.4
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Prerequisites
+* Laravel : 11X
+* php: 8.2 or above
+* Composer
+* MySQL or MariaDB
+* Apache Http server
 
-## About Laravel
+## Setup
+To run this project:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* Pull this git project from master branch, or if you already have this project the use it.
+* Choose SQLite to quickly get started with out needing to do much. 
+* If you choose MySQL or MariaDB or any SQL server then follow the below steps
+* create a database name in MySQL or MariaDB or any SQL server.
+* In the root folder of the project, create the .env file or edit if exists. Provide database name, user name, and password of the database in the .env file. Make sure database connection is established
+* Create a database in mysql using this command `CREATE DATABASE the_seller_platform`.
+* Get the backend dependencies by running the following command in the project folder
+```
+composer install
+```
+* Run the below command to migrate the tables in to the database
+```
+php artisan migrate
+```
+*  Seed the database with predefined data 
+```
+php artisan db:seed
+```
+* try this for seeding if the above command could not run
+```
+php artisan migrate:fresh --seed
+```
+* Run the backend server
+```
+php artisan serve
+```
+Your application setup is done!
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## API Documentation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+On an API call request, we receive a list of items with their prices, which are not discounted. In the discounts table, each discount type (field: discount_type) can either be a percentage discount or a fixed discount. All discounts are categorized by the discount_applicable_type field, which can be general, associated general, or associated limitation. If the discount type is percentage and the discount_applicable_type is general, the discount is applied to all products, with no association to specific product categories. If there are multiple such general percentage discounts, they are stacked and applied one after the other. If the discount type is fixed and the discount_applicable_type is general, the discount is applied to the total price of all products, and again, there is no association to any product category. If there are multiple general fixed discounts, they are also stacked and applied sequentially. Precedence: General percentage discounts take precedence over general fixed discounts.
 
-## Learning Laravel
+If the discount is percentage and the discount_applicable_type is associated general, it means the discount is associated with at least one product category. This discount will only apply to products within the associated categories. Any general percentage discounts will also apply to these associated products. If the discount is percentage and the discount_applicable_type is associated limitation, the discount is associated with one or more product categories. However, this discount will only be applied to products within the associated categories, and general and percentage discounts will not apply to these specific products, limiting the discount to certain product categories.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+If the discount is fixed and the discount_applicable_type is associated general, it is associated with at least one product category, and the discount will be subtracted from the price of all products within those categories. Any general fixed discounts will also be subtracted from those associated products. However, a fixed discount cannot have the discount_applicable_type set to associated limitation, as it would disregard the general subtraction from a particular product, creating inconsistencies.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Testing
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- A test case is included in the project to validate the core functionalities.
+```
+./vendor/bin/pest
+```
