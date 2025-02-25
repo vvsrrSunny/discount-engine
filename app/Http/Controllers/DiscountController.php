@@ -78,7 +78,6 @@ class DiscountController extends Controller
             }
         }
 
-
-        return response()->json(['discounted_price' => $totalDiscountedPrice, $items]);
+        return response()->json(['discounted_price' => $totalDiscountedPrice]);
     }
 }

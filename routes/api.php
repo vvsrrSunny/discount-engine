@@ -7,4 +7,4 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::post('discounts/apply', [DiscountController::class, 'applyDiscount']);
+Route::post('discounts/apply', [DiscountController::class, 'applyDiscount'])->name('discounts.apply');
